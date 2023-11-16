@@ -25,7 +25,7 @@ struct BarChartView: View {
     ]
     
     @State var fontSize: CGFloat = 12
-
+    
     var body: some View {
         Chart(data) {
             BarMark(
@@ -45,6 +45,7 @@ struct BarChartView: View {
             .cornerRadius(2)
         }
         .frame(maxWidth: .infinity, maxHeight: UIScreen.main.bounds.size.height * 0.38)
+        // Hiden x axis and custom label.
         .chartXAxis {
             AxisMarks(values: data.map { $0.title }) { data in
                 AxisValueLabel(centered: true)
@@ -53,14 +54,17 @@ struct BarChartView: View {
                     .offset(y: 8)
             }
         }
-
         .chartYAxis(.hidden)
         .chartYScale(domain: 0...325)
         .onAppear {
-            for (index, _) in data.enumerated() {
-                withAnimation(.easeInOut(duration: 0.5).delay(Double(index) * 0.2)) {
-                    data[index].animate = true
-                }
+            showChartAnimation()
+        }
+    }
+
+    private func showChartAnimation() {
+        for (index, _) in data.enumerated() {
+            withAnimation(.easeInOut(duration: 0.5).delay(Double(index) * 0.2)) {
+                data[index].animate = true
             }
         }
     }
